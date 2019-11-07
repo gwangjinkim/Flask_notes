@@ -126,3 +126,78 @@ def fators_display(n):
     )
 ```
 
+# Current state
+
+```
+from flask import Flask, render_template
+import random
+app = Flask(__name__)
+
+def factors(num):
+    return [x for x in range(1, num+1) if num%x == 0]
+
+@app.route('/')
+def home():
+    n = random.randint(2, 10000)
+    return render_template(
+        "index.html",
+        rndom_num=n,)
+
+@app.route('/factors/<int:n>')
+def factors_dispaly(n):
+    return render_template(
+        "factors.html",
+        number=n
+        factors=factors(n)
+    )
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
+```
+[see template files in repl.it](https://repl.it/@misingnoglic/factors-with-Jinja2-Template)
+`dummy.py` file is just because of a bug in repl.it - a second empty Python file necessary.
+
+
+# Add state using `session`
+
+```
+from flask import Flas, render_template, session
+
+app = Flask(__name__)
+
+# add these two extra lines
+app.secret_key = 'your secret'             # in production really secret key needed!
+app.config['SESSION_TYPE'] = 'filesystem'
+```
+Usage of secret key [here](https://stackoverflow.com/questions/22463939/demystify-flask-app-secret-key) and [here](https://www.reddit.com/r/flask/comments/5l2gmf/af_eli5_how_sessions_work_in_flask/).
+
+After that, you can use session obj like a Python dictionary.
+
+```
+@app.route('/')
+def home():
+    x = session.get('x', None)
+    if not x:
+        sessiion['x'] = 1
+    elif x >= 10:
+        session.clear()
+        return "Session Cleard"
+    else:
+        session['x'] += 1
+        return str(session['x']
+```
+[Flask mega-tutorial](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+[Flask official quickstart](http://flask.pocoo.org/docs/1.0/quickstart/)
+[Flask official tutorial](http://flask.pocoo.org/docs/1.0/tutorial/)
+[Flask official documentation](http://flask.pocoo.org/docs/1.0/)
+
+[Seth Rait's how internet works Part1](http://flask.pocoo.org/docs/1.0/)
+[Part2](https://sethrait.com/How-the-Internet-Works-Part-II.html)
+
+[arya@aryaboudaie.com]
+[https://twitter.com/misingnoglic](https://twitter.com/misingnoglic)
+
+
+
+
+
